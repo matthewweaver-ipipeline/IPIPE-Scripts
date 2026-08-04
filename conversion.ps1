@@ -99,16 +99,12 @@ Write-Host ""
 Write-Host "     Copying utility files..." -ForegroundColor Gray
 #copy all utils necessary for conversion
 Copy-Item -Path "$scriptpath\copilot-utils\setup-engine-bootstrap.md" -Destination "$repoPath\.github\agents\" -Force
-Write-Host "     setup-engine-bootstrap.md" -ForegroundColor Gray
 Copy-Item -Path "$scriptpath\copilot-utils\setup-engine-context.md" -Destination "$repoPath\.github\agents\" -Force
-Write-Host "     setup-engine-context.md" -ForegroundColor Gray
 Copy-Item -Path "$scriptpath\copilot-utils\security-agent.md" -Destination "$repoPath\.github\agents\" -Force
 Copy-Item -Path "$scriptpath\copilot-utils\infrastructure-agent.md" -Destination "$repoPath\.github\agents\" -Force
 Copy-Item -Path "$scriptpath\copilot-utils\documentation-agent.md" -Destination "$repoPath\.github\agents\" -Force
 Copy-Item -Path "$scriptpath\copilot-utils\development-agent.md" -Destination "$repoPath\.github\agents\" -Force
-# Copy-Item -Path "$scriptpath\copilot-utils\copilot-instructions.md" -Destination "$repoPath\.github\" -Force
 Copy-Item -Path "$scriptpath\copilot-utils\ps-convert-trx-to-aws.prompt.md" -Destination "$repoPath\.github\prompts\" -Force
-Write-Host "     ps-convert-trx-to-aws.prompt.md" -ForegroundColor Gray
 Write-Host "All utility files copied" -ForegroundColor Green
 
 Write-Host ""
@@ -155,7 +151,10 @@ Write-Host "[8/8] Executing TRX to AWS conversion..." -ForegroundColor Yellow
 Write-Host "     Converting TRX code to AWS serverless format..." -ForegroundColor Gray
 
 Set-Location $repoPath
-copilot --prompt "/ps-convert-trx-to-aws $additionalPrompt" --model $model --allow-all-tools --no-ask-user
+$promptFile = Join-Path $repoPath ".github\prompts\ps-convert-trx-to-aws.prompt.md"
+$promptText = Get-Content $promptFile -Raw
+
+copilot --prompt "$promptText $additionalPrompt" --model $model --allow-all-tools --no-ask-user
 
 if ($?) {
     Write-Host "TRX to AWS conversion completed successfully" -ForegroundColor Green
