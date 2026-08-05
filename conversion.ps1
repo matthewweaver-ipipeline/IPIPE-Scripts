@@ -151,9 +151,9 @@ Write-Host "[8/8] Executing TRX to AWS conversion..." -ForegroundColor Yellow
 Write-Host "     Converting TRX code to AWS serverless format..." -ForegroundColor Gray
 
 Set-Location $repoPath
+git checkout -b "feat/initialConversion"
 $promptFile = Join-Path $repoPath ".github\prompts\ps-convert-trx-to-aws.prompt.md"
 $promptText = Get-Content $promptFile -Raw
-
 copilot --prompt "$promptText $additionalPrompt" --model $model --allow-all-tools --no-ask-user
 
 if ($?) {
